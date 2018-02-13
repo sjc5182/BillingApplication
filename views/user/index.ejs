@@ -1,0 +1,56 @@
+<h1>Admin Billing Workflow</h1>
+<div>
+    <% users.forEach(function(user){ %>
+        <div>
+            <h4>
+                <%=user.username %>
+            </h4>
+            <h4>
+                billing application status: <%=user.status %>
+                <style>
+                    body { 
+                        background-color: #D8D8D8;
+                        color: #444;
+                    }
+                </style>
+            </h4>
+            <p>
+                <% if((user.status === "Open" || user.status ==="Reject") && currentUser.isFinance){ %>
+                <form method="post" action="/user/<%=user._id %>/approval?_method=PUT">
+                    <button>Submit for Approval</button>
+                </form>
+                <% } %>
+
+                <% if(user.status ==="Finalize" && currentUser.isFinance){ %>
+                <form method="post" action="/user/<%=user._id %>/sent?_method=PUT">
+                    <button>sent</button>
+                </form>
+                <% } %>
+                
+                <% if(user.status ==="Waiting" && currentUser.isCustomerSuccess){ %>
+                <form method="post" action="/user/<%=user._id %>/csapproval?_method=PUT">
+                    <button>Approve</button>
+                </form>
+                <% } %>
+
+                <% if(user.status ==="Approve" && currentUser.isSale ){ %>
+                <form method="post" action="/user/<%=user._id %>/salesapproval?_method=PUT">
+                    <button>Approve</button>
+                </form>
+                <% } %>
+
+                <% if(user.status ==="Waiting" && currentUser.isCustomerSuccess){ %>
+                <form method="post" action="/user/<%=user._id %>/reject?_method=PUT">
+                        <button>Reject</button>
+                </form>
+                <% } %>
+                <% if(user.status ==="Approve" && currentUser.isSale){ %>
+                <form method="post" action="/user/<%=user._id %>/reject?_method=PUT">
+                    <button>Reject</button>
+                </form>
+                <% } %>
+            </p>
+        </div>
+    <% }); %>
+    <a href="/">Go Back</a>
+</div>
